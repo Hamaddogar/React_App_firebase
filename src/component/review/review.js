@@ -1,4 +1,4 @@
-import React from 'react';
+import React ,{useState}from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import List from '@material-ui/core/List';
@@ -21,6 +21,7 @@ const payments = [
   { name: 'Card number', detail: 'xxxx-xxxx-xxxx-1234' },
   { name: 'Expiry date', detail: '04/2024' },
 ];
+var myallArra=[];
 
 const useStyles = makeStyles((theme) => ({
   listItem: {
@@ -33,12 +34,13 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(2),
   },
 }));
-
 export default function Review(props) {
   const classes = useStyles();
    const{alldata}=props
+   const {show,setshow}=useState(0)
 
-
+//save Data
+var myarray=[]
   const submitData=(e)=>{
   e.preventDefault()
 alert("data save in  firebase data base")
@@ -47,11 +49,24 @@ alert("data save in  firebase data base")
 
 
   }
+  
+  const getData=(e)=>{
+    e.preventDefault()
+
+    firebase.database().ref("users").once("value").then((getdata)=>{
+         getdata.forEach((item)=>{
+     console.log({_id:item.key,...item.val()})
+         })
+   
+       })
+      
+  }
   return (
     <React.Fragment>
       <Typography variant="h6" gutterBottom>
         Order summary
           firstName={alldata.firstName}
+
       </Typography>
       <List disablePadding>
         {products.map((product) => (
@@ -78,6 +93,8 @@ alert("data save in  firebase data base")
         <Grid item container direction="column" xs={12} sm={6}>
           <Typography variant="h6" gutterBottom className={classes.title}>
       <button onClick={submitData}>SubmitData</button>
+      <button onClick={getData}>getData</button>
+
           </Typography>
           <Grid container>
             {payments.map((payment) => (
